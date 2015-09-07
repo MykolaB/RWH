@@ -17,4 +17,3 @@ cabal.sandbox.config
 .stack-work/
 
 # Created by .ignore support plugin (hsz.mobi)
-/dist
