@@ -1,4 +1,5 @@
 import System.Environment (getArgs)
+import FirstWord
 
 interactWith function inputFile outputFile = do
   input <- readFile inputFile
@@ -12,4 +13,4 @@ main = mainWith myFunction
             _ -> putStrLn "error: exactly two arguments needed"
 
         -- replace "id" with the name of our function below
-        myFunction s = s ++ "hello"
+        myFunction = unlines . firstWords
