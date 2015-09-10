@@ -1,0 +1,9 @@
+square :: [Double] -> [Double]
+
+square xs = map squareOne xs
+            where squareOne x = x * x
+
+myMap :: (a -> b) -> [a] -> [b]
+myMap f (x:xs) = f x : myMap f xs
+myMap _ _      = []
+
