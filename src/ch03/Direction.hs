@@ -1,5 +1,7 @@
+import Data.List
+
 data Direction = LeftTurn | RightTurn | Straight
-    deriving (Show)
+    deriving (Show, Eq)
 
 data Point = Point {
     x :: Double
@@ -25,7 +27,7 @@ determinant :: Vector -> Vector -> Double
 determinant v1 v2 = (x (coordinate v1) * y (coordinate v2) - y (coordinate v1) * x (coordinate v2))
 
 angle :: Vector -> Vector -> Double
-angle v1 v2 = (-atan2 ((determinant v1 v2) / (vectorLength v1 * vectorLength v2)) ((dotProduct v1 v2))) / (vectorLength v1 * vectorLength v2) * 180 / pi
+angle v1 v2 = (-atan2 (determinant v1 v2) (dotProduct v1 v2)) * 180 / pi
 
 vectorFromPoint :: Point -> Point -> Vector
 vectorFromPoint basePoint point = Vector (Point(x point - x basePoint) (y point - y basePoint))
@@ -55,5 +57,30 @@ findPointWithMinY :: [Point] -> Point
 findPointWithMinY points =
     findPointWithMinY_ hiPoint points
 
---orderPointsByYDelta :: Point -> [Point] -> [Point]
+xVector = Vector (Point 1 0)
 
+angleWithX :: Point -> Point -> Double
+angleWithX p1 p2 = angle (vectorFromPoint p1 p2) (xVector)
+
+orderPointsByAngleWithBase :: Point -> [Point] -> [Point]
+orderPointsByAngleWithBase basePoint points = sortBy sortByAngle points
+    where
+        sortByAngle p1 p2 = compare (angleWithX basePoint p1) (angleWithX basePoint p2)
+
+testPoints = [Point 1 1, Point 2 5.1, Point (-2) 2, Point 10 11]
+
+grahamScan_ :: [Point] -> [Point]
+grahamScan_ points =
+    case points of
+    [x1, x2] -> [x2]
+    (x1 : x2 : x3 : xs) ->
+        if (getDirection x1 x2 x3 == LeftTurn)
+        then x2 : grahamScan_ (x2 : x3 : xs)
+        else grahamScan_ (x1 : x3 : xs)
+
+
+grahamScan :: [Point] -> [Point]
+grahamScan points =
+    let basePoint = findPointWithMinY points
+        sortedPoints = tail (orderPointsByAngleWithBase basePoint points)
+    in basePoint : (head sortedPoints : (grahamScan_ sortedPoints))
