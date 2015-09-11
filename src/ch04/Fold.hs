@@ -1,5 +1,7 @@
 module Fold where
 
+import Data.List
+
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 
 myFoldl step zero (x:xs) = myFoldl step (step zero x) xs
@@ -24,3 +26,22 @@ identity xs = foldr (:) [] xs
 
 append :: [a] -> [a] -> [a]
 append xs ys = foldr (:) ys xs
+
+myAny :: (a -> Bool) -> [a] -> Bool
+myAny f xs = foldl' step False xs
+    where step b a = b || f a
+
+myCycle :: [a] -> [a]
+myCycle xs = foldr step [] [1..]
+    where step _ ys = xs ++ ys
+
+myWords :: String -> [String]
+myWords ws = foldr step [] ws
+    where step c acc | c == ' '  = [] : acc
+                     | otherwise = case acc of
+                                 (x: xs) -> (c : x) : xs
+                                 (_)     -> [c] : acc
+
+myUnlines :: [String] -> String
+myUnlines lines = foldr (++) "" lines
+    --where step line acc = line ++ acc

@@ -1,11 +1,20 @@
-import Data.Char (digitToInt)
+import Data.Char (digitToInt, isDigit)
 
 asInt :: String -> Int
+asInt xs = fst (asInt' xs)
 
-asInt xs = loop 0 xs
+asInt' :: String -> (Int, Int)
+asInt' xs = foldr (f) (0, 1) xs
+    where f c (a, p) = (a + digitToInt c * p, p * 10)
 
-loop :: Int -> String -> Int
-loop acc [] = acc
-loop acc (x:xs) = let acc' = acc * 10 + digitToInt x
-                  in loop acc' xs
 
+asInt_l :: String -> Int
+asInt_l xs =
+    let
+        (sign, num) = case xs of
+                      ('-':ys) -> (-1,ys)
+                      (_)    -> (1, xs)
+    in sign * (foldl step 0 num)
+    where step x y
+            | isDigit(y) = x * 10 + digitToInt y
+            | otherwise = error (y : " - non digit symbol")
