@@ -1,4 +1,3 @@
-import Fold
-
-foldSum xs = foldl (+) 0 xs
+foldSum :: [Integer] -> Integer
+foldSum = foldl (+) 0
 
