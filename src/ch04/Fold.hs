@@ -45,3 +45,9 @@ myWords ws = foldr step [] ws
 myUnlines :: [String] -> String
 myUnlines lines = foldr (++) "" lines
     --where step line acc = line ++ acc
+
+myFoldl' _ zero [] = zero
+myFoldl' step zero (x:xs) =
+    let new = step zero x
+    in new `seq` myFoldl' step new xs
+
