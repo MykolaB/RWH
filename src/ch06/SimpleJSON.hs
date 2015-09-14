@@ -1,4 +1,4 @@
-module Ch05.SimpleJSON
+module SimpleJSON
     (
       JValue(..)
     , getString

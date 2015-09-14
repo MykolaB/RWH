@@ -1,5 +1,3 @@
-module Prettify where
-
 data Doc = Empty
         | Char Char
         | Text String
